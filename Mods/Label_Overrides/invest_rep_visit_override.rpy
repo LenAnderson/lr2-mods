@@ -2,14 +2,14 @@ init 6 python:
     config.label_overrides["invest_rep_visit_label"] = "LENA_invest_rep_visit_label"
 
 label LENA_invest_rep_visit_label(rep_name):
-
+    #There are two possible ways this event is triggered. First we will handle if the player is late to the meeting (aka not at work on the day in question). They get an angry phonecall and the event ends.
     if time_of_day == 3:
         "Your phone rings. When you check it you recognize the name [rep_name], the representative of a mutual fund that you had promised a tour. You answer your phone."
         mc.name "[rep_name], I'm so sorry to have kept you waiting, I..."
         rep_name "Don't bother, I've been waiting here all day but if you can't be bothered to show up to your own office for a planned tour I want nothing to do with your business. Good day."
         "[rep_name] hangs up. You doubt he will be interested in rescheduling."
-    elif True:
-
+    else:
+        #The event was triggered properly, aka the MC was at their office during the next Monday, so they meet rep_name and give them a tour of the facilities.
         "Your phone rings. When you check it you recognize the name [rep_name], the representative of a mutual fund that you had promised a tour. You answer your phone."
         mc.name "[rep_name], good to hear from you. How are you doing?"
         rep_name "I'm doing well. I'm just pulling into your parking lot now, do I need to check in at security?"
@@ -33,7 +33,7 @@ label LENA_invest_rep_visit_label(rep_name):
             rep_name "I'll keep an eye on you though, if you grow your business a little bit maybe I'll call you up and we can reevaluate."
             mc.name "I understand completely. I'll walk you out."
             "You walk [rep_name] back to his car and watch as he drives away."
-        elif True:
+        else:
             mc.name "Actually, how about I call down one of my employees and have them give you a tour around. They've all had much more experience with our product than I have."
             rep_name "That sounds like an excellent idea, I would like to talk to someone who is involved with the day to day operations around here."
             call screen employee_overview(person_select = True)
@@ -46,26 +46,26 @@ label LENA_invest_rep_visit_label(rep_name):
             elif helper.outfit.slut_requirement > 20:
                 "Your idle conversation with [rep_name] trails off when [helper.title] comes into the room. You see his eyes run up and down her before he regains his composure."
                 $ mc.change_locked_clarity(5)
-            elif True:
+            else:
                 "[rep_name] smiles and nods at [helper.title] as she comes into the room."
 
             helper "How can I help [helper.mc_title]?"
             "You take [helper.possessive_title] to the side and tell her what you want her to do."
             $ success_chance = 10
             $ flirt_requires_string = "Flirt with " + rep_name + "\n{color=#ff0000}{size=18}Requires: Obedience 110, " + get_red_heart(10) + "{/size}{/color}"
-            $ seduce_requires_string = "Seduce " + rep_name + "\n{color=#ff0000}{size=18}Requires: Obedience 130, " + get_red_heart(60) + "{/size}{/color}"
+            $ seduce_requires_string = "Seduce " + rep_name + "\n{color=#ff0000}{size=18}Requires: Obedience 130, " + get_red_heart(60) + "{/size}{/color}" #TODO: check to make sure that the sluttiness requirement is being shown.
 
             menu:
-                "Impress [rep_name]" if True:
+                "Impress [rep_name]": #Simplest option, just positive talk about the company.
                     mc.name "[rep_name] here is interested in learning more about the company; I would like you to give him a full tour."
                     "[helper.title] nods and turns to [rep_name]."
                     helper "[rep_name], I'll be your tour guide today. If you just follow me, there is plenty to see."
                     mc.name "I'll be in my office taking care of some paperwork, bring [rep_name] to me when you're done with the tour."
                     "[rep_name] stands and follows [helper.possessive_title] out of the lobby. You return to your office to kill some time and avoid getting in the way."
                     $ success_chance += 5*(helper.charisma + helper.market_skill)
-                    $ success_chance += helper.outfit.slut_requirement/5
+                    $ success_chance += helper.outfit.slut_requirement/5 #Our success chance is based on the impressing persons charisma and marketing, with a small bonus based on their outfit's sluttiness.
 
-                "Flirt with [rep_name]" if helper.sluttiness >= 20 and helper.obedience >= 110:
+                "Flirt with [rep_name]" if helper.sluttiness >= 20 and helper.obedience >= 110: #Requires some sluttiness, more effective than impress.
                     mc.name "[rep_name] here is interested in learning more about the company; I would like you to give him a full tour."
                     helper "I can take care of that."
                     mc.name "One more thing: I doubt he spends much time around someone as beautiful as you. Lay the charm on thick for him."
@@ -76,12 +76,12 @@ label LENA_invest_rep_visit_label(rep_name):
                     helper "This is a wonderful suit by the way, it fits you fantastically. Where do you shop?"
                     "The sound of their conversation trails off as they leave the room. You retreat to your office to kill some time and avoid getting in the way."
                     $ success_chance += 7*(helper.charisma + helper.market_skill)
-                    $ success_chance += helper.outfit.slut_requirement/4
+                    $ success_chance += helper.outfit.slut_requirement/4 #Same basic calculations as above but both outfit sluttiness and charisma/skill are more effective.
 
                 "[flirt_requires_string] (disabled)" if not (helper.sluttiness >= 20 and helper.obedience >= 110):
                     pass
 
-                "Seduce [rep_name]" if helper.sluttiness >= 60 and helper.obedience >= 130:
+                "Seduce [rep_name]" if helper.sluttiness >= 60 and helper.obedience >= 130: #Take rep_name off screen and "convince" him to invest in your company. Highest effectiveness but requires high levels of sluttiness and obedience.
                     mc.name "[rep_name] here is interested in learning more about the company. I need you to give him a complete tour and show him our operations."
                     helper "I can take care of that sir."
                     mc.name "Good. Now this is important so once the tour is done I want you to pull him into one of the meeting rooms and make sure he has a very pleasant visit."
@@ -90,11 +90,11 @@ label LENA_invest_rep_visit_label(rep_name):
                     $ helper.draw_person(position = "walking_away")
                     "[rep_name] stands up and follows [helper.possessive_title] out of the lobby. [helper.title] seems to swing her hips a little more purposefully as she walks in front of [rep_name]."
                     "You retreat to your office to kill some time and avoid getting in the way of the tour."
-                    $ success_chance += 4*(helper.charisma + helper.market_skill)
-                    $ success_chance += helper.outfit.slut_requirement/3
+                    $ success_chance += 4*(helper.charisma + helper.market_skill) # Lower stat contribution but...
+                    $ success_chance += helper.outfit.slut_requirement/3 # Higher outfit contribution and...
                     python:
                         for skill in helper.sex_skills:
-                            success_chance += helper.sex_skills[skill] 
+                            success_chance += helper.sex_skills[skill] #And all sex skills contribute, an average of +4 resulting in a higher average score.
 
                 "[seduce_requires_string] (disabled)" if not (helper.sluttiness >= 60 and helper.obedience >= 130):
                     pass
@@ -104,8 +104,7 @@ label LENA_invest_rep_visit_label(rep_name):
             $ clear_scene()
             if mod_installed:
                 $ mc.change_location(ceo_office)
-                $ mc.location.show_background()
-            elif True:
+            else:
                 $ office.show_background()
             "Half an hour later there is a knock on your office door."
             mc.name "Come in."
@@ -122,20 +121,20 @@ label LENA_invest_rep_visit_label(rep_name):
                 rep_name "I would like to offer you $5000 to help you expand your business. In exchange we'll expect a small part of your ongoing revenue."
                 rep_name "Say... 1%% of every sale. How does that sound?"
                 menu:
-                    "Accept $5000\n{color=#ff0000}{size=18}Cost: 1%% of all future sales{/size}{/color}" if True:
+                    "Accept $5000\n{color=#ff0000}{size=18}Cost: 1%% of all future sales{/size}{/color}":
                         "You reach your hand across the table to shake [rep_name]'s hand."
                         mc.name "I think we have a deal. Lets sort out the paperwork."
                         $ mc.business.change_funds(5000)
                         $ update_investor_payment()
                         "Within an hour $5000 has been moved into your companies bank account. [rep_name] leaves with a report detailing your current research progress."
-                    "Reject the offer" if True:
 
+                    "Reject the offer":
                         mc.name "That's a very tempting offer, but we keep a tight grip on all of our research material."
                         "[rep_name] nods and stands up."
                         rep_name "I understand. Maybe in the future you will reconsider. Thank you for your time and the tour."
                         "You walk [rep_name] back to his car and watch as he drives away."
-            elif True:
 
+            else:
                 rep_name "I won't waste any more of your time [mc.name]. What you're doing here is certainly, ah, interesting, but I don't think I can recommend it as a sound investment at the moment."
                 rep_name "In the future I might visit again to reevaluate though."
                 mc.name "I understand. Thank you for your time, I'll see you out."
@@ -144,5 +143,4 @@ label LENA_invest_rep_visit_label(rep_name):
 
         if mod_installed:
             $ mc.change_location(lobby)
-            $ mc.location.show_background()
     return
