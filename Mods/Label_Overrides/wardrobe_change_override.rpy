@@ -31,25 +31,38 @@ init 6 python:
         print('outfit_type', outfit_type)
 
         if outfit_type == "over":
-            the_outfit = the_person.outfit.get_underwear()
+            print('getting worn underwear')
+            the_outfit = the_person.outfit.get_underwear(exclude_shoes=True)
         elif outfit_type == "under":
+            print('getting worn overwear')
             the_outfit = the_person.outfit.get_overwear()
         
         if outfit_type == "over" or outfit_type == "under":
             if the_outfit is None:
                 if outfit_type == "over":
+                    print('getting random underwear')
                     the_outfit = the_person.wardrobe.pick_random_underwear()
                 else:
+                    print('getting random overwear')
                     the_outfit = the_person.wardrobe.pick_random_overwear()
             for upper in the_outfit.upper_body:
-                outfit.upper_body.append(upper.get_copy())
+                if outfit_type != 'over' or upper.layer <= 1:
+                    print('appending upper', upper.name)
+                    outfit.upper_body.append(upper.get_copy())
             for lower in the_outfit.lower_body:
-                outfit.lower_body.append(lower.get_copy())
+                if outfit_type != 'over' or lower.layer <= 1:
+                    print('appending lower', lower.name)
+                    outfit.lower_body.append(lower.get_copy())
             for feet in the_outfit.feet:
-                outfit.upper_body.append(feet.get_copy())
+                if outfit_type != 'over' or feet.layer <= 1:
+                    print('appending feet', feet.name)
+                    outfit.upper_body.append(feet.get_copy())
             for accessories in the_outfit.accessories:
-                outfit.upper_body.append(accessories.get_copy())
+                if outfit_type != 'over' or accessories.layer <= 1:
+                    print('appending accessories', accessories.name)
+                    outfit.upper_body.append(accessories.get_copy())
             the_outfit = None
+        print('setting outfit', outfit)
         the_person.set_outfit(outfit)
 
 label LENA_wardrobe_change_label_enhanced(the_person):
@@ -111,21 +124,29 @@ label LENA_wardrobe_change_label_enhanced(the_person):
             $ outfit = _return
             if outfit is None:
                 $ print('outfit is None')
+                $ the_person.apply_planned_outfit()
                 pass
             else:
+                $ print('outfit is not None')
                 if outfit != "Not_New":
                     $ the_person.wardrobe.remove_outfit(the_outfit)
+                    $ the_person.add_outfit(outfit,outfit_type)
+                    $ print('outfit added to wardrobe')
+                    $ print('is_worn=',is_worn, 'outfit=',outfit)
                     $ new_outfit_name = renpy.input("Please name this outfit.", default = outfit.name)
                     while new_outfit_name == "":
                         $ new_outfit_name = renpy.input("Please enter a non-empty name.", default = outfit.name)
-            $ print('is_worn=',is_worn, 'outfit=',outfit)
-            if is_worn and outfit is not None and outfit != "Not_New":
-                $ LENA_wear_outfit(the_person, outfit, outfit_type)
-                if the_person.update_outfit_taboos():
-                    "[the_person.title] seems nervous wearing her new outfit in front of you, but quickly warms up to it."
-                the_person "Is this better?"
-            $ the_outfit = None
-        $ the_person.apply_planned_outfit()
+                    $ the_person.call_dialogue("clothing_accept")
+                    if is_worn and outfit is not None and outfit != "Not_New":
+                        $ LENA_wear_outfit(the_person, outfit, outfit_type)
+                        if the_person.update_outfit_taboos():
+                            "[the_person.title] seems nervous wearing her new outfit in front of you, but quickly warms up to it."
+                else:
+                    $ print('outfit is "Not_New"')
+                    $ the_person.apply_planned_outfit()
+        else:
+            $ print('_return is None')
+            $ the_person.apply_planned_outfit()
         $ the_person.draw_person()
 
     elif strip_choice == "wear":
