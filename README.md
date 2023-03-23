@@ -17,6 +17,6 @@ Makes transparency of the different colors on multi-colored clothing items indep
 Allows to type in any transparency (opacity) value for clothing items by clicking on the current value (to the right of the given opacity options).
 
 
-## [Scripts](Scripts/)
+## [Scripts](scripts/)
 
 Scripts to assemble a working game folder out of the different sources (main game, bugfixes, LR2Mods, additional mods, ...).
