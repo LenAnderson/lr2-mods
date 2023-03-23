@@ -17,3 +17,9 @@ You will have to set up a directory as follows.
 ├── update.ps1                     update script that recreates the Game folder
 └── update_mine.ps1                update script that only adds new files from /Parts/my-mods/Mods/ to the Game folder
 ```
+
+- Run `update.ps1` to completely generate the Game folder from scratch (existing folder will be deleted).
+- Run `update_mine.ps1` if you have added new files in my-mods and want to push them to the Game folder.
+
+All files in the Game folder are created as hardlinks, i.e. you can modify file contents in the Parts folder and the changes will be 
+reflected in the Game folder as well. Only if you add or remove files will you have to re-run one of the update scripts.
