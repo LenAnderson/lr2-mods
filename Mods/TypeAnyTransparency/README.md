@@ -1,5 +1,9 @@
 # Type Any Transparency
 
+**Obsolete**
+
+*this has been integrated into the Unofficial Lab Rats 2 Expansion*
+
 ## Installation
 
 Put the .rpy files somewhere in your Mods folder.

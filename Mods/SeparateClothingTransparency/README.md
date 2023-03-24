@@ -1,5 +1,9 @@
 # Separate Clothing Transparency
 
+**Obsolete**
+
+*this has been integrated into the Lab Rats 2 Bugfix Mod*
+
 ## Installation
 
 Put the .rpy files somewhere in your Mods folder.
