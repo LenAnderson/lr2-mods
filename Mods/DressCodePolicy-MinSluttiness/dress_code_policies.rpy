@@ -216,6 +216,83 @@ init 1410 python:
 
 
 
+    def LENA_decide_on_outfit_with_hard_lower_slut_limit(self, person, sluttiness_modifier, slut_limit, slut_limit_lower):
+        print("LENA_decide_on_outfit_with_hard_lower_slut_limit: {}, mod={}, limit={}, lower={}".format(person.name, sluttiness_modifier, slut_limit, slut_limit_lower))
+        conservative_score = person.get_opinion_score("conservative outfits") / 20.0
+        skimpy_outfit_score = person.get_opinion_score("skimpy outfits") / 20.0
+        marketing_score = 0
+        # girls working in marketing know they make more sales when wearing a sluttier outfit, so this affects their uniform choice
+        if mc.business.is_work_day() and male_focused_marketing_policy.is_active() and person in mc.business.market_team:
+            marketing_score = .05
+
+        target_sluttiness = __builtin__.int(person.sluttiness * (1.0 + skimpy_outfit_score + marketing_score + sluttiness_modifier - conservative_score))
+        target_sluttiness = __builtin__.min(target_sluttiness, slut_limit)
+
+        print('final target:', target_sluttiness)
+
+        outfit_list = []
+        outfit_candidates = []
+
+        if self.outfits:
+            # try to find a full outfit
+            print('checking full outfits')
+            for outfit in self.outfits:
+                score = outfit.get_full_outfit_slut_score()
+                outfit_tuple = (outfit, score, score-slut_limit_lower, score-target_sluttiness)
+                outfit_list.append(outfit_tuple)
+                if score >= slut_limit_lower:
+                    outfit_candidates.append(outfit_tuple)
+        else:
+            print('does not have full outfits')
+        if self.underwear_sets and self.overwear_sets:
+            # try to build an outfit from underwear and overwear
+            # first, let's brute force all under+over combinations
+            print('brute forcing combi outfits')
+            for under in self.underwear_sets:
+                for over in self.overwear_sets:
+                    outfit = build_assembled_outfit(under, over)
+                    score = outfit.get_full_outfit_slut_score()
+                    outfit_list.append((outfit, score, score-slut_limit_lower, score-target_sluttiness))
+                    if score >= slut_limit_lower:
+                        outfit_candidates.append((outfit, score, score-slut_limit_lower, score-target_sluttiness))
+        else:
+            print('does not have under and over sets')
+        print('all candidates: ', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
+        
+        if __builtin__.len(outfit_candidates) > 0:
+            if target_sluttiness < slut_limit_lower:
+                # impossible to find something person is comfortable with
+                # just keep the outfits with the lowest sluttiness
+                min_score = __builtin__.min([x[1] for x in outfit_candidates])
+                outfit_candidates = [x for x in outfit_candidates if x[1] == min_score]
+                print('could not find something comfy, lowest:', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
+            else:
+                # pick outfits closest to target sluttiness
+                min_distance = __builtin__.min(__builtin__.abs(x[3]) for x in outfit_candidates)
+                outfit_candidates = [x for x in outfit_candidates if __builtin__.abs(x[3]) == min_distance]
+                print('outfits closest to target:', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
+            
+            picked_outfit = outfit_candidates[renpy.random.randint(0,__builtin__.len(outfit_candidates))-1]
+            print('picked outfit:', (picked_outfit[0].name, picked_outfit[1], picked_outfit[2], picked_outfit[3]))
+            return picked_outfit[0].get_copy()
+         
+        # we have not found any outfits following the dress code
+        print('could not find any matching outfits -> pick outfit closest to dress code')
+        if __builtin__.len(outfit_list) > 0:
+            min_distance = __builtin__.min([__builtin__.abs(x[2]) for x in outfit_list])
+            outfit_list = [x for x in outfit_list if __builtin__.abs(x[2]) == min_distance]
+            if __builtin__.len(outfit_list) > 0:
+                picked_outfit = outfit_list[renpy.random.randint(0,__builtin__.len(outfit_list))-1]
+                print('picked outfit:', (picked_outfit[0].name, picked_outfit[1], picked_outfit[2], picked_outfit[3]))
+                return picked_outfit[0].get_copy()
+        
+        # we have not found any outfits!
+        print('could not find any outfits at all -> generate random')
+        return generate_random_appropriate_outfit(person, sluttiness = target_sluttiness)
+
+    Wardrobe.decide_on_outfit_with_hard_lower_slut_limit = LENA_decide_on_outfit_with_hard_lower_slut_limit
+
+
     def LENA_decide_on_uniform_enhanced(self, person):
         slut_limit = 999
         slut_limit_lower = 0
@@ -225,13 +302,15 @@ init 1410 python:
             valid_wardrobe = self.build_uniform_wardrobe(slut_limit, underwear_limit, limited_to_top)
         else:
             valid_wardrobe = self.build_uniform_wardrobe()
+
+        sluttiness_modifier = person.get_opinion_score("work uniforms") / 40.0 # low impact on sluttiness
         
         print(person.name, ' employee:',person.is_employee(), ' intern:',person.is_intern())
         if person.is_employee() or person.is_intern():
             slut_limit_lower = mc.business.get_uniform_lower_limits()
             print(person.name, 'is employee or intern, lower_limit:', slut_limit_lower)
-
-        sluttiness_modifier = person.get_opinion_score("work uniforms") / 40.0 # low impact on sluttiness
+            if slut_limit_lower > 0:
+                return valid_wardrobe.decide_on_outfit_with_hard_lower_slut_limit(person, sluttiness_modifier = sluttiness_modifier, slut_limit = slut_limit, slut_limit_lower = slut_limit_lower)
 
         uniform = valid_wardrobe.decide_on_outfit2(person, sluttiness_modifier = sluttiness_modifier, slut_limit = slut_limit, slut_limit_lower = slut_limit_lower)
 
