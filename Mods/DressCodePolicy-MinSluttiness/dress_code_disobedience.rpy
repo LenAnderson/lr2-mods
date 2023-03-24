@@ -19,7 +19,13 @@ init -1 python:
 
         for person in [x for x in mc.business.get_employee_list() if x.should_wear_dress_code()]:
             print('checking', person.name, 'score=',person.outfit.get_full_outfit_slut_score(), ' limit=',slut_limit_lower)
-            if person.outfit.get_full_outfit_slut_score() < slut_limit_lower:
+            if person.event_triggers_dict.get("forced_uniform", False):
+                # person is wearing a forced (punishment) uniform
+                pass
+            elif person.event_triggers_dict.get('accepted_dress_code_outfit_day', -1) == day and person.event_triggers_dict.get('accepted_dress_code_outfit', None) == person.outfit:
+                # person was already caught today and is currently wearing the outfit that resulted out of that interaction
+                pass
+            elif person.outfit.get_full_outfit_slut_score() < slut_limit_lower:
                 print('-> no outfit')
                 dress_code_min_disobedience_action = Action("Dress Code Min Disobedience LTE", dress_code_min_disobedience_requirement, "dress_code_min_disobedience_event", event_duration = 3, args = person.dress_code_outfit.get_copy())
                 person.on_talk_event_list.append(Limited_Time_Action(dress_code_min_disobedience_action, dress_code_min_disobedience_action.event_duration))
@@ -41,7 +47,14 @@ init -1 python:
         return
 
     def dress_code_min_disobedience_requirement(the_person):
-        if __builtin__.getattr(the_person, 'dress_code_disobedience_accepted', -1) < day and the_person.should_wear_dress_code() and the_person.dress_code_outfit.get_full_outfit_slut_score() < mc.business.get_uniform_lower_limits(): #ie. they should be in uniform, but they've decided their "uniform" is their normal outfit because of the event above.
+        if the_person.event_triggers_dict.get("forced_uniform", False):
+            # person is wearing a forced (punishment) uniform
+            return False
+        if the_person.event_triggers_dict.get('accepted_dress_code_outfit_day', -1) == day and the_person.event_triggers_dict.get('accepted_dress_code_outfit', None) == the_person.outfit:
+            # person was already caught today and is currently wearing the outfit that resulted out of that interaction
+            return false
+        if the_person.should_wear_dress_code() and the_person.outfit.get_full_outfit_slut_score() < mc.business.get_uniform_lower_limits():
+            # person should wear a dress code outfit but sluttiness is below policy
             return True
         return False
 
@@ -230,8 +243,9 @@ label dress_code_min_disobedience_event(dress_code_outfit, the_person):
                 $ the_person.strip_outfit(exclude_feet = False)
                 "Once she's stripped naked she grabs the outfit and starts to put it on."
                 $ the_person.dress_code_outfit = new_outfit
-                $ the_person.dress_code_disobedience_accepted = day
                 $ the_person.apply_outfit(new_outfit, update_taboo = True)
+                $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
+                $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
                 $ the_person.draw_person()
                 the_person "Is this better?"
                 mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
@@ -245,7 +259,8 @@ label dress_code_min_disobedience_event(dress_code_outfit, the_person):
             $ the_person.change_happiness(10)
             $ the_person.change_love(1)
             $ the_person.change_obedience(-2)
-            $ the_person.dress_code_disobedience_accepted = day
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
 
         "Done" if has_no_outfit:
             mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
@@ -256,7 +271,8 @@ label dress_code_min_disobedience_event(dress_code_outfit, the_person):
             $ builder = WardrobeBuilder(the_person)
             $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
             $ the_person.add_outfit(new_outfit, "full")
-            $ the_person.dress_code_disobedience_accepted = day
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
     
     the_person "Is there something you needed to talk to me about?"
     call talk_person(the_person) from dress_code_min_disobedience_call_talk_person
