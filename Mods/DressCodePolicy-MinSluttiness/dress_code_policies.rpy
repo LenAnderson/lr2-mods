@@ -15,7 +15,7 @@ init 1410 python:
         cost = 1000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 15 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [relaxed_uniform_policy, dress_code_policy],
+        own_requirement = [relaxed_uniform_policy, dress_code_policy, dress_code_policy_min_05],
         extra_arguments = {"dress_code_min_disobedience_priority":15},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -26,7 +26,7 @@ init 1410 python:
         cost = 2000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 25 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [reduced_coverage_uniform_policy, dress_code_policy],
+        own_requirement = [reduced_coverage_uniform_policy, dress_code_policy, dress_code_policy_min_15],
         extra_arguments = {"dress_code_min_disobedience_priority":25},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -37,7 +37,7 @@ init 1410 python:
         cost = 5000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 35 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [reduced_coverage_uniform_policy, dress_code_policy],
+        own_requirement = [reduced_coverage_uniform_policy, dress_code_policy, dress_code_policy_min_25],
         extra_arguments = {"dress_code_min_disobedience_priority":35},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -48,7 +48,7 @@ init 1410 python:
         cost = 10000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 45 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [minimal_coverage_uniform_policy, dress_code_policy],
+        own_requirement = [minimal_coverage_uniform_policy, dress_code_policy, dress_code_policy_min_35],
         extra_arguments = {"dress_code_min_disobedience_priority":45},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -59,7 +59,7 @@ init 1410 python:
         cost = 15000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 55 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [minimal_coverage_uniform_policy, dress_code_policy],
+        own_requirement = [minimal_coverage_uniform_policy, dress_code_policy, dress_code_policy_min_45],
         extra_arguments = {"dress_code_min_disobedience_priority":55},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -70,7 +70,7 @@ init 1410 python:
         cost = 25000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 65 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [corporate_enforced_nudity_policy, dress_code_policy],
+        own_requirement = [corporate_enforced_nudity_policy, dress_code_policy, dress_code_policy_min_55],
         extra_arguments = {"dress_code_min_disobedience_priority":65},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -81,7 +81,7 @@ init 1410 python:
         cost = 35000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 75 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [corporate_enforced_nudity_policy, dress_code_policy],
+        own_requirement = [corporate_enforced_nudity_policy, dress_code_policy, dress_code_policy_min_65],
         extra_arguments = {"dress_code_min_disobedience_priority":75},
         on_move_function = dress_code_min_disobedience_on_move,
     )
@@ -92,7 +92,7 @@ init 1410 python:
         cost = 50000,
         desc = "Employees are required to wear a full outfit of at least sluttiness 85 as part of their dress code or uniform.",
         toggleable = True,
-        own_requirement = [maximal_arousal_uniform_policy, dress_code_policy],
+        own_requirement = [maximal_arousal_uniform_policy, dress_code_policy, dress_code_policy_min_75],
         extra_arguments = {"dress_code_min_disobedience_priority":85},
         on_move_function = dress_code_min_disobedience_on_move,
     )
