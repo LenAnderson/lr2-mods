@@ -25,24 +25,25 @@ init -1 python:
             elif person.event_triggers_dict.get('accepted_dress_code_outfit_day', -1) == day and person.event_triggers_dict.get('accepted_dress_code_outfit', None) == person.outfit:
                 # person was already caught today and is currently wearing the outfit that resulted out of that interaction
                 pass
-            elif person.outfit.get_full_outfit_slut_score() < slut_limit_lower:
-                print('-> no outfit')
-                dress_code_min_disobedience_action = Action("Dress Code Min Disobedience LTE", dress_code_min_disobedience_requirement, "dress_code_min_disobedience_event", event_duration = 3, args = person.dress_code_outfit.get_copy())
-                person.on_talk_event_list.append(Limited_Time_Action(dress_code_min_disobedience_action, dress_code_min_disobedience_action.event_duration))
             elif person.dress_code_outfit:
-                print('-> chance based')
-                disobedience_chance = 0
-                if not person.judge_outfit(person.dress_code_outfit):
-                    disobedience_chance = person.dress_code_outfit.get_full_outfit_slut_score() - __builtin__.int( person.effective_sluttiness() * (person.obedience / 150.0) ) #Girls who find the outfit too slutty might disobey, scaled by their obedience
-                    disobedience_chance += -5*(person.get_opinion_score("skimpy uniforms"))
-                else:
-                    disobedience_chance = (150 - person.obedience)/2 #Disobedient girls sometimes don't wear uniforms, just because they don't like following orders. Less likely than when outfits are too slutty.
-                    disobedience_chance += -5*(person.get_opinion_score("work uniforms"))
-                if renpy.random.randint(0,100) < __builtin__.max(disobedience_chance, 3): # minimum chance is 3%
-                    dress_code_min_disobedience_action = Action("Dress Code Min Disobedience LTE", dress_code_min_disobedience_requirement, "dress_code_min_disobedience_event", event_duration = 3, args = person.dress_code_outfit.get_copy()) #Needs to be created here so we can reference what we disliked about the uniform.
+                if person.outfit.get_full_outfit_slut_score() < slut_limit_lower:
+                    print('-> no outfit')
+                    dress_code_min_disobedience_action = Action("Dress Code Min Disobedience LTE", dress_code_min_disobedience_requirement, "dress_code_min_disobedience_event", event_duration = 3, args = person.dress_code_outfit.get_copy())
                     person.on_talk_event_list.append(Limited_Time_Action(dress_code_min_disobedience_action, dress_code_min_disobedience_action.event_duration))
-                    person.dress_code_outfit = person.planned_outfit #Overwrites the uniform they intended to wear for the day, so the next Move doesn't change it but the end of day will.
-                    person.apply_outfit() #Change them into their planned outfits for the day
+                else:
+                    print('-> chance based')
+                    disobedience_chance = 0
+                    if not person.judge_outfit(person.dress_code_outfit):
+                        disobedience_chance = person.dress_code_outfit.get_full_outfit_slut_score() - __builtin__.int( person.effective_sluttiness() * (person.obedience / 150.0) ) #Girls who find the outfit too slutty might disobey, scaled by their obedience
+                        disobedience_chance += -5*(person.get_opinion_score("skimpy uniforms"))
+                    else:
+                        disobedience_chance = (150 - person.obedience)/2 #Disobedient girls sometimes don't wear uniforms, just because they don't like following orders. Less likely than when outfits are too slutty.
+                        disobedience_chance += -5*(person.get_opinion_score("work uniforms"))
+                    if renpy.random.randint(0,100) < __builtin__.max(disobedience_chance, 3): # minimum chance is 3%
+                        dress_code_min_disobedience_action = Action("Dress Code Min Disobedience LTE", dress_code_min_disobedience_requirement, "dress_code_min_disobedience_event", event_duration = 3, args = person.dress_code_outfit.get_copy()) #Needs to be created here so we can reference what we disliked about the uniform.
+                        person.on_talk_event_list.append(Limited_Time_Action(dress_code_min_disobedience_action, dress_code_min_disobedience_action.event_duration))
+                        person.dress_code_outfit = person.planned_outfit #Overwrites the uniform they intended to wear for the day, so the next Move doesn't change it but the end of day will.
+                        person.apply_outfit() #Change them into their planned outfits for the day
 
         return
 
