@@ -53,7 +53,7 @@ init -1 python:
             return False
         if the_person.event_triggers_dict.get('accepted_dress_code_outfit_day', -1) == day and the_person.event_triggers_dict.get('accepted_dress_code_outfit', None) == the_person.outfit:
             # person was already caught today and is currently wearing the outfit that resulted out of that interaction
-            return false
+            return False
         if the_person.should_wear_dress_code() and the_person.outfit.get_full_outfit_slut_score() < mc.business.get_uniform_lower_limits():
             # person should wear a dress code outfit but sluttiness is below policy
             return True
