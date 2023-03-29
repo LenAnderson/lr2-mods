@@ -60,6 +60,100 @@ init -1 python:
         return False
 
 
+label dress_code_min_disobedience_stripping(the_person, has_no_outfit):
+    $ dress_code_outfit = the_person.outfit.get_copy()
+    menu dress_code_min_disobedience_strip_menu:
+        # change current outfit / assign another outfit if person doesn't own a matching outfit
+        "Have her remove her top (disabled)" if not dress_code_outfit.get_overwear().get_upper_top_layer():
+            pass
+        "Have her remove her top" if dress_code_outfit.get_overwear().get_upper_top_layer():
+            $ dress_code_outfit.remove_clothing_list([dress_code_outfit.get_overwear().get_upper_top_layer()])
+            $ the_person.dress_code_outfit = dress_code_outfit
+            $ the_person.wear_dress_code()
+            $ the_person.draw_person()
+            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
+                if has_no_outfit:
+                    mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+                    $ builder = WardrobeBuilder(the_person)
+                    $ new_outfit = builder.build_outfit(None, points=slut_limit_lower)
+                    $ new_outfit = the_person.personalize_outfit(new_outfit, opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+                    $ the_person.add_outfit(new_outfit, "full")
+                else:
+                    mc.name "You can stay like this for the rest of the day. But tomorrow I expect you to wear something appropriate to work."
+            else:
+                jump dress_code_min_disobedience_strip_menu
+
+        "Have her remove her bottoms (disabled)" if not dress_code_outfit.get_overwear().get_lower_top_layer():
+            pass
+        "Have her remove her bottoms" if dress_code_outfit.get_overwear().get_lower_top_layer():
+            $ dress_code_outfit.remove_clothing_list([dress_code_outfit.get_overwear().get_lower_top_layer()])
+            $ the_person.dress_code_outfit = dress_code_outfit
+            $ the_person.wear_dress_code()
+            $ the_person.draw_person()
+            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
+                if has_no_outfit:
+                    mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+                    $ builder = WardrobeBuilder(the_person)
+                    $ new_outfit = builder.build_outfit(None, points=slut_limit_lower)
+                    $ new_outfit = the_person.personalize_outfit(new_outfit, opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+                    $ the_person.add_outfit(new_outfit, "full")
+                else:
+                    mc.name "You can stay like this for the rest of the day. But tomorrow I expect you to wear something appropriate to work."
+            else:
+                jump dress_code_min_disobedience_strip_menu
+
+        "Have her remove her bra (disabled)" if not dress_code_outfit.wearing_bra():
+            pass
+        "Have her remove her bra" if dress_code_outfit.wearing_bra():
+            $ dress_code_outfit.remove_bra()
+            $ the_person.dress_code_outfit = dress_code_outfit
+            $ the_person.wear_dress_code()
+            $ the_person.draw_person()
+            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
+                if has_no_outfit:
+                    mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+                    $ builder = WardrobeBuilder(the_person)
+                    $ new_outfit = builder.build_outfit(None, points=slut_limit_lower)
+                    $ new_outfit = the_person.personalize_outfit(new_outfit, opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+                    $ the_person.add_outfit(new_outfit, "full")
+                else:
+                    mc.name "You can stay like this for the rest of the day. But tomorrow I expect you to wear something appropriate to work."
+            else:
+                jump dress_code_min_disobedience_strip_menu
+
+        "Have her remove her panties (disabled)" if not dress_code_outfit.wearing_panties():
+            pass
+        "Have her remove her panties" if dress_code_outfit.wearing_panties():
+            $ dress_code_outfit.remove_panties()
+            $ the_person.dress_code_outfit = dress_code_outfit
+            $ the_person.wear_dress_code()
+            $ the_person.draw_person()
+            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
+                if has_no_outfit:
+                    mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+                    $ builder = WardrobeBuilder(the_person)
+                    $ new_outfit = builder.build_outfit(None, points=slut_limit_lower)
+                    $ new_outfit = the_person.personalize_outfit(new_outfit, opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+                    $ the_person.add_outfit(new_outfit, "full")
+                else:
+                    mc.name "You can stay like this for the rest of the day. But tomorrow I expect you to wear something appropriate to work."
+            else:
+                jump dress_code_min_disobedience_strip_menu
+
+        "Done":
+            mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+            the_person "Thank you [the_person.mc_title], the break is appreciated."
+            $ the_person.change_happiness(5)
+            $ the_person.change_love(1)
+            $ the_person.change_obedience(-1)
+            $ builder = WardrobeBuilder(the_person)
+            $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+            $ the_person.add_outfit(new_outfit, "full")
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
+            $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
+    return
+
+
 label dress_code_min_disobedience_event(dress_code_outfit, the_person):
     $ slut_limit_lower = mc.business.get_uniform_lower_limits()
     $ has_no_outfit = False
@@ -124,157 +218,89 @@ label dress_code_min_disobedience_event(dress_code_outfit, the_person):
     $ the_person.add_infraction(Infraction.out_of_uniform_factory())
     mc.name "The dress code isn't a suggestion [the_person.title], it's a requirement for continued employment."
 
+    if not has_no_outfit:
+        menu dress_code_min_disobedience_menu:
+            # wear uniform if person owns a matching outfit
+            "Send her to get changed" if not has_no_outfit:
+                mc.name "Go and get changed."
+                if the_person.obedience < 90:
+                    "[the_person.possessive_title] sighs and rolls her eyes."
+                    the_person "Fine, I'll go put it on."
+                else:
+                    the_person "Right away [the_person.mc_title]."
+                $ clear_scene()
+                "She hurries out of the room. You wait by her desk until she comes back."
+                $ the_person.dress_code_outfit = dress_code_outfit
+                $ the_person.wear_dress_code()
+                $ the_person.draw_person()
+                "A few moments later [the_person.possessive_title] comes back, now properly in uniform."
+            
+            "Have her change right here\n{color=#ff0000}{size=18}Requires policy: Reduced Coverage Corporate Uniforms{/size}{/color} (disabled)" if not has_no_outfit and not reduced_coverage_uniform_policy.is_active():
+                pass
+            "Have her change right here" if not has_no_outfit and reduced_coverage_uniform_policy.is_active():
+                mc.name "Do you have your proper clothes with you?"
+                the_person "I have them in my desk."
+                mc.name "Good. Get them and get changed."
+                "She nods and slides open one of her desk drawers, grabbing her outfit and tucking it under her arm."
+                the_person "I'll be back in a moment..."
+                mc.name "No, you're going to get changed here. I obviously need to make sure you're wearing it properly."
+                if the_person.effective_sluttiness(["bare_pussy", "bare_tits"]) > 40: #No big deal.
+                    the_person "Fine, I guess it doesn't really matter."
+                else: #Shy about it
+                    the_person "You don't really mean that, do you? Right here?"
+                    mc.name "Do I need to write you up for insubordination too?"
+                    the_person "No, I'll do it..."
+                    $ the_person.change_obedience(1 + the_person.get_opinion_score("being submissive"))
+                $ generalised_strip_description(the_person, the_person.outfit.get_full_strip_list(strip_feet = True, strip_accessories = True))
+                $ mc.change_locked_clarity(10)
+                "Once stripped down [the_person.possessive_title] puts on her work clothes."
+                $ the_person.dress_code_outfit = dress_code_outfit
+                $ the_person.wear_dress_code()
+                $ the_person.draw_person()
 
+            "Strip her down":
+                call dress_code_min_disobedience_stripping(the_person, False) from dress_code_min_disobedience_call_stripping
 
-    menu dress_code_min_disobedience_menu:
-        # wear uniform if person owns a matching outfit
-        "Send her to get changed" if not has_no_outfit:
-            mc.name "Go and get changed."
-            if the_person.obedience < 90:
-                "[the_person.possessive_title] sighs and rolls her eyes."
-                the_person "Fine, I'll go put it on."
-            else:
-                the_person "Right away [the_person.mc_title]."
-            $ clear_scene()
-            "She hurries out of the room. You wait by her desk until she comes back."
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-            "A few moments later [the_person.possessive_title] comes back, now properly in uniform."
-        
-        "Have her change right here\n{color=#ff0000}{size=18}Requires policy: Reduced Coverage Corporate Uniforms{/size}{/color} (disabled)" if not has_no_outfit and not reduced_coverage_uniform_policy.is_active():
-            pass
-        "Have her change right here" if not has_no_outfit and reduced_coverage_uniform_policy.is_active():
-            mc.name "Do you have your proper clothes with you?"
-            the_person "I have them in my desk."
-            mc.name "Good. Get them and get changed."
-            "She nods and slides open one of her desk drawers, grabbing her outfit and tucking it under her arm."
-            the_person "I'll be back in a moment..."
-            mc.name "No, you're going to get changed here. I obviously need to make sure you're wearing it properly."
-            if the_person.effective_sluttiness(["bare_pussy", "bare_tits"]) > 40: #No big deal.
-                the_person "Fine, I guess it doesn't really matter."
-            else: #Shy about it
-                the_person "You don't really mean that, do you? Right here?"
-                mc.name "Do I need to write you up for insubordination too?"
-                the_person "No, I'll do it..."
-                $ the_person.change_obedience(1 + the_person.get_opinion_score("being submissive"))
-            $ generalised_strip_description(the_person, the_person.outfit.get_full_strip_list(strip_feet = True, strip_accessories = True))
-            $ mc.change_locked_clarity(10)
-            "Once stripped down [the_person.possessive_title] puts on her work clothes."
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-        
-        
-        # change current outfit / assign another outfit if person doesn't own a matching outfit
-        "Have her remove her top (disabled)" if has_no_outfit and not dress_code_outfit.get_overwear().get_upper_top_layer():
-            pass
-        "Have her remove her top" if has_no_outfit and dress_code_outfit.get_overwear().get_upper_top_layer():
-            $ dress_code_outfit.remove_clothing_list([dress_code_outfit.get_overwear().get_upper_top_layer()])
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
-                mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-                $ builder = WardrobeBuilder(the_person)
-                $ new_outfit = builder.build_outfit(None, points=slut_limit_lower)
-                $ print('builder: ', new_outfit.name, new_outfit.get_full_outfit_slut_score())
-                $ new_outfit = the_person.personalize_outfit(new_outfit, opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-                $ print('personalized: ', new_outfit.name, new_outfit.get_full_outfit_slut_score())
-                $ the_person.add_outfit(new_outfit, "full")
-            else:
-                jump dress_code_min_disobedience_menu
-        "Have her remove her bottoms (disabled)" if has_no_outfit and not dress_code_outfit.get_overwear().get_lower_top_layer():
-            pass
-        "Have her remove her bottoms" if has_no_outfit and dress_code_outfit.get_overwear().get_lower_top_layer():
-            $ dress_code_outfit.remove_clothing_list([dress_code_outfit.get_overwear().get_lower_top_layer()])
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
-                mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-                $ builder = WardrobeBuilder(the_person)
-                $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-                $ the_person.add_outfit(new_outfit, "full")
-            else:
-                jump dress_code_min_disobedience_menu
-        "Have her remove her bra (disabled)" if has_no_outfit and not dress_code_outfit.wearing_bra():
-            pass
-        "Have her remove her bra" if has_no_outfit and dress_code_outfit.wearing_bra():
-            $ dress_code_outfit.remove_bra()
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
-                mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-                $ builder = WardrobeBuilder(the_person)
-                $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-                $ the_person.add_outfit(new_outfit, "full")
-            else:
-                jump dress_code_min_disobedience_menu
-        "Have her remove her panties (disabled)" if has_no_outfit and not dress_code_outfit.wearing_panties():
-            pass
-        "Have her remove her panties" if has_no_outfit and dress_code_outfit.wearing_panties():
-            $ dress_code_outfit.remove_panties()
-            $ the_person.dress_code_outfit = dress_code_outfit
-            $ the_person.wear_dress_code()
-            $ the_person.draw_person()
-            if dress_code_outfit.get_full_outfit_slut_score() >= slut_limit_lower:
-                mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-                $ builder = WardrobeBuilder(the_person)
-                $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-                $ the_person.add_outfit(new_outfit, "full")
-            else:
-                jump dress_code_min_disobedience_menu
-        
-        "Give her an outfit to wear" if has_no_outfit:
-            mc.name "Lucky for you, I have an outfit you can wear in my office."
-            $ clear_scene()
-            call outfit_master_manager(slut_limit = __builtin__.max(the_person.sluttiness + 10, slut_limit_lower), show_overwear = False, show_underwear = False) from _call_outfit_master_manager_dress_code_disobedience
-            $ new_outfit = _return
-            $ the_person.draw_person()
-            if new_outfit is None:
-                "You cannot find an appropriate outfit in your office after all."
-                mc.name "Sorry [the_person.title], I thought I had something appropriate in my office but I guess I was wrong."
-                jump dress_code_min_disobedience_menu
-            else:
-                "You lay the outfit out for [the_person.possessive_title]. She looks it over and nods."
-                the_person "It'll just take a moment for me to slip into this."
-                "[the_person.possessive_title] starts to strip down in front of you."
-                $ the_person.strip_outfit(exclude_feet = False)
-                "Once she's stripped naked she grabs the outfit and starts to put it on."
-                $ the_person.dress_code_outfit = new_outfit
-                $ the_person.apply_outfit(new_outfit, update_taboo = True)
+            "Give her an outfit to wear" if has_no_outfit:
+                mc.name "Lucky for you, I have an outfit you can wear in my office."
+                $ clear_scene()
+                call outfit_master_manager(slut_limit = __builtin__.max(the_person.sluttiness + 10, slut_limit_lower), show_overwear = False, show_underwear = False) from _call_outfit_master_manager_dress_code_disobedience
+                $ new_outfit = _return
+                $ the_person.draw_person()
+                if new_outfit is None:
+                    "You cannot find an appropriate outfit in your office after all."
+                    mc.name "Sorry [the_person.title], I thought I had something appropriate in my office but I guess I was wrong."
+                    jump dress_code_min_disobedience_menu
+                else:
+                    "You lay the outfit out for [the_person.possessive_title]. She looks it over and nods."
+                    the_person "It'll just take a moment for me to slip into this."
+                    "[the_person.possessive_title] starts to strip down in front of you."
+                    $ the_person.strip_outfit(exclude_feet = False)
+                    "Once she's stripped naked she grabs the outfit and starts to put it on."
+                    $ the_person.dress_code_outfit = new_outfit
+                    $ the_person.apply_outfit(new_outfit, update_taboo = True)
+                    $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
+                    $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
+                    $ the_person.draw_person()
+                    the_person "Is this better?"
+                    mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
+                    $ builder = WardrobeBuilder(the_person)
+                    $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
+                    $ the_person.add_outfit(new_outfit, "full")
+
+            "Let her stay out of uniform":
+                mc.name "But, just this once, I'll make an exception. I expect you in an appropriate outfit for your next shift."
+                the_person "Thank you [the_person.mc_title], the break is appreciated."
+                $ the_person.change_happiness(10)
+                $ the_person.change_love(1)
+                $ the_person.change_obedience(-2)
                 $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
                 $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
-                $ the_person.draw_person()
-                the_person "Is this better?"
-                mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-                $ builder = WardrobeBuilder(the_person)
-                $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-                $ the_person.add_outfit(new_outfit, "full")
 
-        "Let her stay out of uniform":
-            mc.name "But, just this once, I'll make an exception. I expect you in an appropriate outfit for your next shift."
-            the_person "Thank you [the_person.mc_title], the break is appreciated."
-            $ the_person.change_happiness(10)
-            $ the_person.change_love(1)
-            $ the_person.change_obedience(-2)
-            $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
-            $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
+    else:
+        call dress_code_min_disobedience_stripping(the_person, True) from dress_code_min_disobedience_call_stripping_by_default
 
-        "Done" if has_no_outfit:
-            mc.name "You can stay like this for the rest of the day. But you should go and buy an appropriate outfit after you leave work today."
-            the_person "Thank you [the_person.mc_title], the break is appreciated."
-            $ the_person.change_happiness(5)
-            $ the_person.change_love(1)
-            $ the_person.change_obedience(-1)
-            $ builder = WardrobeBuilder(the_person)
-            $ new_outfit = the_person.personalize_outfit(builder.build_outfit(None, points=slut_limit_lower+10, min_points=slut_limit_lower), opinion_color = the_person.favorite_colour(), coloured_underwear = True, swap_bottoms = True, allow_skimpy = True)
-            $ the_person.add_outfit(new_outfit, "full")
-            $ the_person.event_triggers_dict['accepted_dress_code_outfit'] = the_person.outfit
-            $ the_person.event_triggers_dict['accepted_dress_code_outfit_day'] = day
-    
+
     the_person "Is there something you needed to talk to me about?"
     call talk_person(the_person) from dress_code_min_disobedience_call_talk_person
     return
