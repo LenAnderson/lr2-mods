@@ -174,9 +174,12 @@ init 1410 python:
                 outfit_candidates = [x for x in outfit_candidates if x[1] == min_score]
                 print('could not find something comfy, lowest:', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
             else:
+                outfit_candidates_between_min_and_target = [x for x in outfit_candidates if x[1] >= slut_limit_lower and x[1] <= target_sluttiness]
+                if len(outfit_candidates_between_min_and_target) > 0:
+                    outfit_candidates = outfit_candidates_between_min_and_target
                 # pick outfits closest to target sluttiness
                 min_distance = __builtin__.min(__builtin__.abs(x[3]) for x in outfit_candidates)
-                outfit_candidates = [x for x in outfit_candidates if __builtin__.abs(x[3]) == min_distance]
+                outfit_candidates = [x for x in outfit_candidates if __builtin__.abs(x[3]) == min_distance or x[3] >= -15]
                 print('outfits closest to target:', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
             
             picked_outfit = outfit_candidates[renpy.random.randint(0,__builtin__.len(outfit_candidates))-1]
