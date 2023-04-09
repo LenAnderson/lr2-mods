@@ -122,6 +122,17 @@ init 1410 python:
             # try to find a full outfit
             print('checking full outfits')
             for outfit in self.outfits:
+                if easier_access_policy.is_active():
+                    outfit.make_easier_access()
+                if commando_uniform_policy.is_active(): # always applied, overrides uniform
+                    if person.has_large_tits():
+                        outfit.remove_panties()    # they still need the support ;)
+                        if not outfit.wearing_bra(): # probably a body suit, she will show a real bra to wear
+                            outfit.add_upper(sports_bra.get_copy(), neutral_palette[renpy.random.choice(neutral_color_map["Underwear"])])
+                            WardrobeBuilder.set_sexier_bra(person, outfit) # update for sexier version if slutty enough
+                    else:
+                        # outfit.remove_bra_and_panties()
+                        outfit.remove_panties()
                 score = outfit.get_full_outfit_slut_score()
                 outfit_tuple = (outfit, score, score-slut_limit_lower, score-target_sluttiness)
                 outfit_list.append(outfit_tuple)
@@ -136,6 +147,17 @@ init 1410 python:
             for under in self.underwear_sets:
                 for over in self.overwear_sets:
                     outfit = build_assembled_outfit(under, over)
+                    if easier_access_policy.is_active():
+                        outfit.make_easier_access()
+                    if commando_uniform_policy.is_active(): # always applied, overrides uniform
+                        if person.has_large_tits():
+                            outfit.remove_panties()    # they still need the support ;)
+                            if not outfit.wearing_bra(): # probably a body suit, she will show a real bra to wear
+                                outfit.add_upper(sports_bra.get_copy(), neutral_palette[renpy.random.choice(neutral_color_map["Underwear"])])
+                                WardrobeBuilder.set_sexier_bra(person, outfit) # update for sexier version if slutty enough
+                        else:
+                            # outfit.remove_bra_and_panties()
+                            outfit.remove_panties()
                     score = outfit.get_full_outfit_slut_score()
                     outfit_list.append((outfit, score, score-slut_limit_lower, score-target_sluttiness))
                     if score >= slut_limit_lower:
