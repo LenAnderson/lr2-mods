@@ -1,17 +1,47 @@
 $src = Get-Item '.\Parts\'
 $dst = '.\Game\'
 $partList = @(
-	@('my-mods\Mods', 'game\Mods\_LenAnderson\'),
-	@('mods-other', 'game\Mods\_Other')
+	# my own mods
+	@('my-mods\Mods', 'game\Mods_zzMine\')
 )
 $dstList = @()
 
+function Test-Item {
+	param (
+		[string[]]$Skips,
+		[io.FileInfo]$Item
+	)
+
+	if ($Item.Extension -eq '.rpyc') {
+		return $false
+	}
+	if ($Item.Name -eq 'README.md') {
+		return $false
+	}
+	if ($Item.FullName -contains '\README\') {
+		return $false
+	}
+	foreach ($skip in $Skips) {
+		if ($Item.FullName -like '*'+$skip+'*') {
+			return $false
+		}
+	}
+	return $true
+}
+
 foreach ($part in $partList) {
 	$partDir = Join-Path $dst $part[1]
+	Remove-Item -Force -Recurse $partDir
+	$skips = @()
+	$skipList = Get-ChildItem -Path (Join-Path $src $part[0]) -Recurse -File -Filter .skip
+	foreach ($skip in $skipList) {
+		$skips += $skip.Directory.FullName
+	}
+
 	$childList = Get-ChildItem -Path (Join-Path $src $part[0]) -Recurse -File
 	foreach ($child in $childList) {
-		if (($child.Extension -ne '.rpyc') -and ($child.Name -ne 'README.md') -and ($child.Directory.Name -ne 'README') -and !(Test-Path (Join-Path $child.Directory.FullName '.skip'))) {
-			$childDst = Join-Path $partDir $child.FullName.Substring($src.FullName.Length + $part[0].Length + 1)
+		if (Test-Item -Skips $skips -Item $child) {
+			$childDst = Join-Path $partDir $child.FullName.Substring($src.FullName.Length + $part[0].Length)
 			$childDstDir = $childDst.Substring(0, $childDst.Length - $child.Name.Length - 1)
 			if (!(Test-Path $childDstDir)) {
 				New-Item -ItemType Directory $childDstDir

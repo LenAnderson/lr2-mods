@@ -1,25 +1,14 @@
-
 $src = Get-Item '.\Parts\'
 $dst = '.\Game\'
 $partList = @(
-	# renpy and .exe files for modded game
-	@('Lab-Rats-2-renpy', ''),
-	# bugfix (clone the git repository)
-	@('bugfix\game', 'game\'),
-	# unofficial expansion (clone the git repository)
-	@('mod\Mods', 'game\Mods\'),
 	# new map (and some other stuff) by silenced (clone the git repository)
 	@('mods-silenced\Mods_Silence', 'game\Mods_Silence\'),
 	# other mods that don't have to end up in the "game" dir
 	@('mods-other', 'game\Mods_xxOther'),
 	# my own mods
-	@('my-mods\Mods', 'game\Mods_zzMine\'),
-	# vanilla game
-	@('Lab_Rats_2-v0.51.1-pc\game', 'game\')
+	@('my-mods\Mods', 'game\Mods_zzMine\')
 )
-
-Remove-Item -Force -Recurse .\Game\
-New-Item -ItemType Directory -Name "Game"
+$dstList = @()
 
 function Test-Item {
 	param (
@@ -46,6 +35,7 @@ function Test-Item {
 
 foreach ($part in $partList) {
 	$partDir = Join-Path $dst $part[1]
+	Remove-Item -Force -Recurse $partDir
 	$skips = @()
 	$skipList = Get-ChildItem -Path (Join-Path $src $part[0]) -Recurse -File -Filter .skip
 	foreach ($skip in $skipList) {
@@ -60,8 +50,12 @@ foreach ($part in $partList) {
 			if (!(Test-Path $childDstDir)) {
 				New-Item -ItemType Directory $childDstDir
 			}
-			if (!(Test-Path $childDst)) {
+			if (!$dstList.Contains($childDst)) {
+				if ((Test-Path $childDst)) {
+					Remove-Item $childDst
+				}
 				New-Item -ItemType HardLink -Name $childDst -Target $child.FullName
+				$dstList += @($childDst.FullName)
 			}
 		}
 	}
