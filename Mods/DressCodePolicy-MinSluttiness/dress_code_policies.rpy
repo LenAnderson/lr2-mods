@@ -203,7 +203,7 @@ init 1410 python:
                     outfit_candidates = outfit_candidates_between_min_and_target
                 # pick outfits closest to target sluttiness
                 min_distance = __builtin__.min(__builtin__.abs(x[3]) for x in outfit_candidates)
-                outfit_candidates = [x for x in outfit_candidates if __builtin__.abs(x[3]) == min_distance or x[3] >= -15]
+                outfit_candidates = [x for x in outfit_candidates if __builtin__.abs(x[3]) == min_distance or (x[3] >= -15 and x[3] <= 0)]
                 print('outfits closest to target:', [(x[0].name, x[1], x[2], x[3]) for x in outfit_candidates])
             
             picked_outfit = outfit_candidates[renpy.random.randint(0,__builtin__.len(outfit_candidates))-1]
