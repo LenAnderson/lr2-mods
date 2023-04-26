@@ -11,6 +11,8 @@ Adds a couple of dress code policies that add a minimum sluttiness requirement t
 Adds a small chance with high sluttiness and high obedience that seducing the representative ends with cum stains on the employee.
 - [Modify Outfit](Mods/ModifyOutfit/)  
 Adds an option to modify a person's existing outfits to the "Change your wardrobe" command.
+- [Serum Traits](Mods/Serums/)  
+    - **Orgasm Blocker:** Raises max arousal by 999 while the serum is active.
 - ~~[Separate Clothing Transparency](Mods/SeparateClothingTransparency/)~~  
 **obsolete** - *this has been integrated into the Lab Rats 2 Bugfix Mod*  
 Makes transparency of the different colors on multi-colored clothing items independent from one another (e.g., to allow a non-transparent belt or scarf on an otherwise transparent item).
