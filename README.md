@@ -13,6 +13,8 @@ Adds a small chance with high sluttiness and high obedience that seducing the re
 Adds an option to modify a person's existing outfits to the "Change your wardrobe" command.
 - [Serum Traits](Mods/Serums/)  
     - **Orgasm Blocker:** Raises max arousal by 999 while the serum is active.
+- [Nearby Locations](Mods/NearbyLocations/)  
+Adds a list of nearby locations (same district / building on the new map) to the action menu.
 - ~~[Separate Clothing Transparency](Mods/SeparateClothingTransparency/)~~  
 **obsolete** - *this has been integrated into the Lab Rats 2 Bugfix Mod*  
 Makes transparency of the different colors on multi-colored clothing items independent from one another (e.g., to allow a non-transparent belt or scarf on an otherwise transparent item).
