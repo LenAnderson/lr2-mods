@@ -144,12 +144,28 @@ init 1410 python:
                     outfit_candidates.append(outfit_tuple)
         else:
             print('does not have full outfits')
+        underwear_sets = []
+        overwear_sets = []
+
         if self.underwear_sets and self.overwear_sets:
+            print('wardrobe has under and over sets')
+            underwear_sets = self.underwear_sets
+            overwear_sets = self.overwear_sets
+        elif self.underwear_sets and person.wardrobe.overwear_sets:
+            print('wardrobe has under, person has over')
+            underwear_sets = self.underwear_sets
+            overwear_sets = person.wardrobe.overwear_sets
+        elif self.overwear_sets and person.wardrobe.underwear_sets:
+            print('wardrobe has over, person has under')
+            underwear_sets = person.wardrobe.underwear_sets
+            overwear_sets = self.overwear_sets
+
+        if underwear_sets and overwear_sets:
             # try to build an outfit from underwear and overwear
             # first, let's brute force all under+over combinations
             print('brute forcing combi outfits')
-            for under in self.underwear_sets:
-                for over in self.overwear_sets:
+            for under in underwear_sets:
+                for over in overwear_sets:
                     outfit = build_assembled_outfit(under, over)
                     if creative_colored_uniform_policy.is_active():
                         outfit = WardrobeBuilder(person).personalize_outfit(outfit,
