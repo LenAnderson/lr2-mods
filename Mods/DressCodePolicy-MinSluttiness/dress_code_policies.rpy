@@ -279,6 +279,29 @@ init 1410 python:
     # replace default uniform decision function
     Wardrobe.decide_on_uniform = LENA_decide_on_uniform_enhanced
 
+    def LENA_apply_outfit(self, the_outfit = None, ignore_base = False, update_taboo = False): #Hand over an outfit, we'll take a copy and apply it to the person, along with their base accessories unless told otherwise.
+        if the_outfit is None:
+            # put on uniform if required
+            if self.should_wear_uniform():
+                self.wear_uniform()
+                return
+            if self.should_wear_dress_code():
+                self.wear_dress_code()
+                return
+
+            the_outfit = self.planned_outfit
+            if the_outfit is None:
+                return #We don't have a planned outfit, so trying to return to it makes no sense.
+        if ignore_base:
+            self.outfit = the_outfit.get_copy()
+        else:
+            self.outfit = the_outfit.get_copy().merge_outfit(self.base_outfit)
+
+        if update_taboo: #If True, we assume this outfit is being put on or shown to the MC. It can break taboos about showing underwear, tits, pussy.
+            self.update_outfit_taboos()
+    
+    Person.apply_outfit = LENA_apply_outfit
+
 
 
 
