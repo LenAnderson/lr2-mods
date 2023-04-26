@@ -122,6 +122,10 @@ init 1410 python:
             # try to find a full outfit
             print('checking full outfits')
             for outfit in self.outfits:
+                if creative_colored_uniform_policy.is_active():
+                    outfit = WardrobeBuilder(person).personalize_outfit(outfit,
+                        swap_bottoms = personal_bottoms_uniform_policy.is_active(),
+                        allow_skimpy = creative_skimpy_uniform_policy.is_active())
                 if easier_access_policy.is_active():
                     outfit.make_easier_access()
                 if commando_uniform_policy.is_active(): # always applied, overrides uniform
@@ -147,6 +151,10 @@ init 1410 python:
             for under in self.underwear_sets:
                 for over in self.overwear_sets:
                     outfit = build_assembled_outfit(under, over)
+                    if creative_colored_uniform_policy.is_active():
+                        outfit = WardrobeBuilder(person).personalize_outfit(outfit,
+                            swap_bottoms = personal_bottoms_uniform_policy.is_active(),
+                            allow_skimpy = creative_skimpy_uniform_policy.is_active())
                     if easier_access_policy.is_active():
                         outfit.make_easier_access()
                     if commando_uniform_policy.is_active(): # always applied, overrides uniform
